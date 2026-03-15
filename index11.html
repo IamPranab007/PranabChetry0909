@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Grade & CGPA Calculator</title>
+
+<style>
+:root{
+  --bg:#0b0f1a;
+  --card:#12172a;
+  --accent:#7c4dff;
+  --accent-hover:#2196f3;
+  --text:#e8eaf6;
+  --muted:#9aa0c7;
+  --success:#4caf50;
+  --danger:#f44336;
+}
+
+*{
+  box-sizing:border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#11183a,#05070f);
+  color:var(--text);
+  min-height:100vh;
+  padding:20px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+}
+
+h1{
+  text-align:center;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.card{
+  background:rgba(18,23,42,0.85);
+  backdrop-filter:blur(12px);
+  border-radius:16px;
+  padding:20px;
+  margin-top:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+.subject{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr auto;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+input{
+  background:#0c1022;
+  border:1px solid #1f2450;
+  border-radius:10px;
+  padding:10px;
+  color:var(--text);
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--accent);
+}
+
+button{
+  background:var(--accent);
+  border:none;
+  color:white;
+  padding:10px 16px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+  font-weight:500;
+}
+
+button:hover{
+  background:var(--accent-hover);
+}
+
+.remove{
+  background:var(--danger);
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.result{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.box{
+  background:#0c1022;
+  padding:15px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.big{
+  font-size:28px;
+  font-weight:600;
+}
+
+.good{color:var(--success);}
+.bad{color:var(--danger);}
+
+.progress{
+  height:10px;
+  background:#1f2450;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.progress span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--accent-hover));
+  width:0%;
+}
+
+@media(max-width:600px){
+  .subject{
+    grid-template-columns:1fr 1fr;
+  }
+}
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+</style>
+</head>
+<a class="pb-btn" href="index2.html">← Back</a>
+
+<body>
+
+<div class="container">
+  <h1>📊 Premium Grade & CGPA Calculator</h1>
+
+  <div class="card">
+    <h3>Subjects</h3>
+    <div id="subjects"></div>
+
+    <div class="actions">
+      <button onclick="addSubject()">➕ Add Subject</button>
+      <button onclick="calculate()">📈 Calculate</button>
+      <button onclick="resetAll()">♻ Reset</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Results</h3>
+    <div class="result">
+      <div class="box">
+        <div class="big" id="percentage">0%</div>
+        <div>Overall Percentage</div>
+        <div class="progress"><span id="bar"></span></div>
+      </div>
+
+      <div class="box">
+        <div class="big" id="grade">-</div>
+        <div>Final Grade</div>
+      </div>
+
+      <div class="box">
+        <div class="big" id="cgpa">0.0</div>
+        <div>Estimated CGPA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const subjectsDiv=document.getElementById("subjects");
+
+function addSubject(){
+  const div=document.createElement("div");
+  div.className="subject";
+  div.innerHTML=`
+    <input placeholder="Subject">
+    <input type="number" placeholder="Marks">
+    <input type="number" placeholder="Total">
+    <button class="remove" onclick="this.parentElement.remove()">✖</button>
+  `;
+  subjectsDiv.appendChild(div);
+}
+
+addSubject();addSubject();
+
+function calculate(){
+  let totalMarks=0, totalObtained=0;
+
+  document.querySelectorAll(".subject").forEach(s=>{
+    const inputs=s.querySelectorAll("input");
+    const m=parseFloat(inputs[1].value)||0;
+    const t=parseFloat(inputs[2].value)||0;
+    totalObtained+=m;
+    totalMarks+=t;
+  });
+
+  if(totalMarks===0)return;
+
+  const percent=(totalObtained/totalMarks)*100;
+  document.getElementById("percentage").innerText=percent.toFixed(2)+"%";
+  document.getElementById("bar").style.width=percent+"%";
+
+  let grade="F",cgpa=0;
+  if(percent>=90){grade="A+";cgpa=10;}
+  else if(percent>=80){grade="A";cgpa=9;}
+  else if(percent>=70){grade="B";cgpa=8;}
+  else if(percent>=60){grade="C";cgpa=7;}
+  else if(percent>=50){grade="D";cgpa=6;}
+  else{grade="F";cgpa=0;}
+
+  document.getElementById("grade").innerText=grade;
+  document.getElementById("cgpa").innerText=cgpa.toFixed(1);
+}
+
+function resetAll(){
+  subjectsDiv.innerHTML="";
+  addSubject();addSubject();
+  document.getElementById("percentage").innerText="0%";
+  document.getElementById("grade").innerText="-";
+  document.getElementById("cgpa").innerText="0.0";
+  document.getElementById("bar").style.width="0%";
+}
+</script>
+
+</body>
+</html>

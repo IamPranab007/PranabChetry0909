@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Session Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>/* Global Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        transition: background-color 0.3s, color 0.3s;
+        padding: 1rem;
+    }
+    body.light-mode {
+        background-color: #ffffff;
+        color: #121212;
+    }
+    header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    h1 {
+        margin-bottom: 1rem;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    input, select {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+    
+    /* Sections */
+    section {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border: 1px solid #333;
+        border-radius: 10px;
+    }
+    .stat {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #333;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+    .progress-bar div {
+        height: 100%;
+        background-color: #4CAF50;
+        transition: width 0.3s;
+    }
+    
+    /* Weekly Chart */
+    #week-chart {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 1rem;
+    }
+    .day-bar {
+        width: 40px;
+        background-color: #333;
+        border-radius: 5px;
+        position: relative;
+    }
+    .day-bar div {
+        background-color: #4CAF50;
+        width: 100%;
+        border-radius: 5px;
+    }
+    .day-bar span {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+    }
+    
+    /* Subject List */
+    .subject-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+    .subject-item:nth-child(1) { background-color: #ff6b6b; }
+    .subject-item:nth-child(2) { background-color: #4ecdc4; }
+    .subject-item:nth-child(3) { background-color: #45b7d1; }
+    .subject-item:nth-child(4) { background-color: #f9ca24; }
+    .subject-item:nth-child(5) { background-color: #6c5ce7; }
+    
+    /* Session List */
+    #session-list {
+        list-style: none;
+    }
+    .session-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+    }
+    .session-item button {
+        background-color: #f44336;
+        margin-left: 0.5rem;
+    }
+    .session-item button:hover {
+        background-color: #d32f2f;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+        .filters {
+            flex-direction: column;
+        }
+        .session-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+    .pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+    </style>
+<body>
+    <a class="pb-btn" href="index2.html">← Back</a>
+    <header>
+
+    
+        <h1>Study Session Tracker</h1>
+        <button id="theme-toggle">Toggle Light Mode</button>
+        <button id="clear-data-btn">Clear All Data</button>
+        <button id="export-btn">Export Data</button>
+    </header>
+    <main>
+        <section id="summary-section">
+            <h2>Today's Summary</h2>
+            <div class="stat">
+                <span>Total Time:</span> <span id="today-time">0 min</span>
+            </div>
+            <div class="stat">
+                <span>Sessions:</span> <span id="today-sessions">0</span>
+            </div>
+            <div class="progress-bar">
+                <div id="today-progress" style="width: 0%;"></div>
+            </div>
+        </section>
+        
+        <section id="weekly-section">
+            <h2>Weekly Summary</h2>
+            <div class="stat">
+                <span>Total Time:</span> <span id="week-time">0 min</span>
+            </div>
+            <div class="stat">
+                <span>Average per Day:</span> <span id="week-average">0 min</span>
+            </div>
+            <div id="week-chart"></div>
+        </section>
+        
+        <section id="subjects-section">
+            <h2>Subject Tracking</h2>
+            <div id="subject-list"></div>
+        </section>
+        
+        <section id="insights-section">
+            <h2>Focus Insights</h2>
+            <div class="stat">
+                <span>Longest Streak:</span> <span id="longest-streak">0 days</span>
+            </div>
+            <div class="stat">
+                <span>Most Productive Time:</span> <span id="productive-time">N/A</span>
+            </div>
+            <p id="suggestion">Keep studying consistently!</p>
+        </section>
+        
+        <section id="manual-entry-section">
+            <h2>Add Manual Session</h2>
+            <form id="manual-form">
+                <label>Subject: <input type="text" id="subject-input" required></label>
+                <label>Type: 
+                    <select id="type-input" required>
+                        <option value="Pomodoro">Pomodoro</option>
+                        <option value="Deep Focus">Deep Focus</option>
+                        <option value="Revision">Revision</option>
+                    </select>
+                </label>
+                <label>Duration (min): <input type="number" id="duration-input" min="1" required></label>
+                <label>Date: <input type="date" id="date-input" required></label>
+                <button type="submit">Add Session</button>
+            </form>
+        </section>
+        
+        <section id="sessions-section">
+            <h2>Session History</h2>
+            <div class="filters">
+                <label>Filter by Subject: <input type="text" id="filter-subject"></label>
+                <label>Filter by Type: 
+                    <select id="filter-type">
+                        <option value="">All</option>
+                        <option value="Pomodoro">Pomodoro</option>
+                        <option value="Deep Focus">Deep Focus</option>
+                        <option value="Revision">Revision</option>
+                    </select>
+                </label>
+                <label>Filter by Date: <input type="date" id="filter-date"></label>
+            </div>
+            <ul id="session-list"></ul>
+        </section>
+    </main>
+    <script >// Global variables
+        let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+        let subjects = {};
+        
+        // Load data
+        function loadData() {
+            sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+            updateSubjects();
+            updateUI();
+        }
+        
+        // Save data
+        function saveData() {
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+        }
+        
+        // Update subjects tracking
+        function updateSubjects() {
+            subjects = {};
+            sessions.forEach(session => {
+                if (!subjects[session.subject]) subjects[session.subject] = 0;
+                subjects[session.subject] += session.duration;
+            });
+        }
+        
+        // Update UI
+        function updateUI() {
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            
+            // Today's summary
+            const todaySessions = sessions.filter(s => s.date === today);
+            const todayTime = todaySessions.reduce((sum, s) => sum + s.duration, 0);
+            document.getElementById('today-time').textContent = todayTime + ' min';
+            document.getElementById('today-sessions').textContent = todaySessions.length;
+            document.getElementById('today-progress').style.width = Math.min(todayTime / 480 * 100, 100) + '%'; // Assuming 8 hours goal
+            
+            // Weekly summary
+            const weekSessions = sessions.filter(s => s.date >= weekAgo);
+            const weekTime = weekSessions.reduce((sum, s) => sum + s.duration, 0);
+            const weekAverage = Math.floor(weekTime / 7);
+            document.getElementById('week-time').textContent = weekTime + ' min';
+            document.getElementById('week-average').textContent = weekAverage + ' min';
+            
+            // Weekly chart
+            const weekChart = document.getElementById('week-chart');
+            weekChart.innerHTML = '';
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                const daySessions = sessions.filter(s => s.date === date);
+                const dayTime = daySessions.reduce((sum, s) => sum + s.duration, 0);
+                const height = Math.min(dayTime / 480 * 100, 100);
+                weekChart.innerHTML += `<div class="day-bar"><div style="height: ${height}%"></div><span>${dayTime}m</span></div>`;
+            }
+            
+            // Subjects
+            const subjectList = document.getElementById('subject-list');
+            subjectList.innerHTML = '';
+            Object.entries(subjects).sort((a, b) => b[1] - a[1]).forEach(([subject, time], index) => {
+                subjectList.innerHTML += `<div class="subject-item"><span>${subject}</span><span>${time} min</span></div>`;
+            });
+            
+            // Insights
+            const streaks = calculateStreaks();
+            document.getElementById('longest-streak').textContent = streaks.max + ' days';
+            const productiveTime = findProductiveTime();
+            document.getElementById('productive-time').textContent = productiveTime;
+            document.getElementById('suggestion').textContent = generateSuggestion();
+            
+            // Session list
+            updateSessionList();
+        }
+        
+        // Calculate streaks
+        function calculateStreaks() {
+            let current = 0, max = 0;
+            const dates = [...new Set(sessions.map(s => s.date))].sort();
+            for (let i = 0; i < dates.length; i++) {
+                if (new Date(dates[i]).getTime() - new Date(dates[i-1] || 0).getTime() <= 24 * 60 * 60 * 1000) {
+                    current++;
+                    max = Math.max(max, current);
+                } else {
+                    current = 1;
+                }
+            }
+            return { current, max };
+        }
+        
+        // Find most productive time
+        function findProductiveTime() {
+            const times = sessions.map(s => new Date(s.date + 'T' + s.time).getHours());
+            const counts = {};
+            times.forEach(hour => {
+                counts[hour] = (counts[hour] || 0) + 1;
+            });
+            const maxHour = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b, 0);
+            if (maxHour < 12) return 'Morning';
+            if (maxHour < 18) return 'Afternoon';
+            return 'Evening';
+        }
+        
+        // Generate suggestion
+        function generateSuggestion() {
+            const weekSessions = sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+            const avg = weekSessions.length / 7;
+            if (avg < 1) return 'Try to study every day this week!';
+            return 'Great consistency! Keep it up.';
+        }
+        
+        // Update session list
+        function updateSessionList() {
+            const list = document.getElementById('session-list');
+            list.innerHTML = '';
+            const filtered = sessions.filter(s => {
+                const subjectMatch = !document.getElementById('filter-subject').value || s.subject.toLowerCase().includes(document.getElementById('filter-subject').value.toLowerCase());
+                const typeMatch = !document.getElementById('filter-type').value || s.type === document.getElementById('filter-type').value;
+                const dateMatch = !document.getElementById('filter-date').value || s.date === document.getElementById('filter-date').value;
+                return subjectMatch && typeMatch && dateMatch;
+            });
+            filtered.forEach((session, index) => {
+                list.innerHTML += `
+                    <li class="session-item">
+                        <div>${session.subject} - ${session.type} - ${session.duration} min - ${session.date}</div>
+                        <div>
+                            <button onclick="editSession(${index})">Edit</button>
+                            <button onclick="deleteSession(${index})">Delete</button>
+                        </div>
+                    </li>
+                `;
+            });
+        }
+        
+        // Add manual session
+        document.getElementById('manual-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const session = {
+                subject: document.getElementById('subject-input').value,
+                type: document.getElementById('type-input').value,
+                duration: parseInt(document.getElementById('duration-input').value),
+                date: document.getElementById('date-input').value,
+                time: new Date().toTimeString().split(' ')[0]
+            };
+            sessions.push(session);
+            saveData();
+            updateSubjects();
+            updateUI();
+            document.getElementById('manual-form').reset();
+        });
+        
+        // Edit session
+        function editSession(index) {
+            const session = sessions[index];
+            document.getElementById('subject-input').value = session.subject;
+            document.getElementById('type-input').value = session.type;
+            document.getElementById('duration-input').value = session.duration;
+            document.getElementById('date-input').value = session.date;
+            deleteSession(index);
+        }
+        
+        // Delete session
+        function deleteSession(index) {
+            sessions.splice(index, 1);
+            saveData();
+            updateSubjects();
+            updateUI();
+        }
+        
+        // Filters
+        document.getElementById('filter-subject').addEventListener('input', updateSessionList);
+        document.getElementById('filter-type').addEventListener('change', updateSessionList);
+        document.getElementById('filter-date').addEventListener('change', updateSessionList);
+        
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+        
+        // Clear data
+        document.getElementById('clear-data-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all data?')) {
+                sessions = [];
+                saveData();
+                updateSubjects();
+                updateUI();
+            }
+        });
+        
+        // Export data
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const dataStr = JSON.stringify(sessions, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'study-sessions.json';
+            a.click();
+        });
+        
+        // Initialize
+        loadData();
+        </script>
+</body>
+</html>

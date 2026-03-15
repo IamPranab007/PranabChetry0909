@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivy Technique Planner - Student Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+/* Purple → Blue Premium Button */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+
+
+    /* CSS Variables for Consistency */
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-glass: rgba(255, 255, 255, 0.1);
+    --accent-blue: #00d4ff;
+    --accent-violet: #9c27b0;
+    --accent-teal: #00bcd4;
+    --accent-red: #ff5252;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px var(--accent-blue);
+    --shadow-deep: 0 8px 40px rgba(0, 0, 0, 0.5);
+    --border-radius: 16px;
+    --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a1a 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-light);
+    margin-bottom: 40px;
+}
+.header h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+.header .subtitle {
+    font-size: 1.2rem;
+    color: var(--accent-teal);
+}
+
+/* Add Task Form */
+.add-task {
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-light);
+    margin-bottom: 40px;
+}
+.add-task h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+}
+.add-task form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.add-task input {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+.add-task input::placeholder {
+    color: var(--text-secondary);
+}
+.btn-primary, .btn-secondary, .btn-danger {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.btn-primary {
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-teal));
+    color: var(--text-primary);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--accent-violet);
+    color: var(--accent-violet);
+}
+.btn-secondary:hover {
+    background: var(--accent-violet);
+    color: var(--text-primary);
+}
+.btn-danger {
+    background: var(--accent-red);
+    color: var(--text-primary);
+}
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--accent-red);
+}
+
+/* Focus Toggle */
+.focus-toggle {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.focus-toggle p {
+    color: var(--text-secondary);
+    margin-top: 10px;
+}
+
+/* Task Lists */
+.tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.task-list {
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-light);
+}
+.task-list h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+}
+.task-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-deep);
+}
+.task-card.top-task {
+    border-left: 5px solid var(--accent-blue);
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+.task-card.current-focus {
+    box-shadow: var(--shadow-glow);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: var(--shadow-glow); }
+    50% { box-shadow: 0 0 30px var(--accent-violet); }
+}
+.task-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: var(--accent-teal);
+}
+.task-card p {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+.task-card .time {
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+.task-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.task-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.task-actions .up-btn {
+    background: var(--accent-teal);
+}
+.task-actions .down-btn {
+    background: var(--accent-violet);
+}
+.task-actions .complete-btn {
+    background: var(--accent-blue);
+}
+.task-actions button:hover {
+    transform: scale(1.05);
+}
+
+/* Focus Mode */
+.focus-mode .task-card:not(.current-focus) {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal.show {
+    display: flex;
+}
+.modal-content {
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow-deep);
+    text-align: center;
+}
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+}
+.modal-content p {
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+.modal-content .btn-primary, .modal-content .btn-secondary {
+    margin: 0 10px;
+}
+
+/* Animations */
+.task-card.move {
+    animation: slideIn 0.5s ease-out;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.task-card.complete {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+@keyframes fadeOut {
+    to { opacity: 0; transform: scale(0.9); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .header {
+        padding: 40px 20px;
+    }
+    .header h1 {
+        font-size: 2.5rem;
+    }
+    .add-task, .task-list {
+        padding: 20px;
+    }
+    .add-task form {
+        gap: 12px;
+    }
+    .add-task input, .btn-primary, .btn-secondary, .btn-danger {
+        padding: 14px; /* Larger for touch */
+        font-size: 1.1rem;
+    }
+    .task-card {
+        padding: 25px;
+    }
+    .task-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .task-actions button {
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
+</style>
+<body>
+ <!-- Purple to Blue Button -->
+<a class="pb-btn" href="index2.html">← Back</a>
+
+
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Ivy Technique Planner</h1>
+            <p class="subtitle">Focus on what truly matters</p>
+        </header>
+
+        <!-- Add Task Form -->
+        <section class="add-task">
+            <h2>Add a Study Task</h2>
+            <form id="task-form">
+                <input type="text" id="subject" placeholder="Subject (e.g., Math)" required>
+                <input type="text" id="description" placeholder="Task Description (e.g., Solve algebra problems)" required>
+                <input type="number" id="time" placeholder="Estimated Time (minutes)" min="1" required>
+                <button type="submit" class="btn-primary">Add Task</button>
+            </form>
+        </section>
+
+        <!-- Focus Mode Toggle -->
+        <section class="focus-toggle">
+            <button id="focus-mode-btn" class="btn-secondary">Enable Focus Mode</button>
+            <p>Highlights only your current task for deep concentration.</p>
+        </section>
+
+        <!-- Task Lists -->
+        <section class="tasks">
+            <div class="task-list" id="active-tasks">
+                <h2>Active Tasks</h2>
+                <div id="top-tasks" class="top-tasks">
+                    <!-- Top 3 tasks will be inserted here -->
+                </div>
+                <div id="other-tasks" class="other-tasks">
+                    <!-- Other tasks will be inserted here -->
+                </div>
+            </div>
+            <div class="task-list" id="done-tasks">
+                <h2>Completed Tasks</h2>
+                <div id="done-list">
+                    <!-- Completed tasks will be inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reset Button -->
+        <section class="reset-section">
+            <button id="reset-btn" class="btn-danger">Reset for New Day</button>
+        </section>
+    </div>
+
+    <!-- Confirmation Modal for Reset -->
+    <div id="reset-modal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Reset</h3>
+            <p>Are you sure you want to clear all tasks for a new day? This action cannot be undone.</p>
+            <button id="confirm-reset" class="btn-primary">Yes, Reset</button>
+            <button id="cancel-reset" class="btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+const taskForm = document.getElementById('task-form');
+const subjectInput = document.getElementById('subject');
+const descriptionInput = document.getElementById('description');
+const timeInput = document.getElementById('time');
+const topTasks = document.getElementById('top-tasks');
+const otherTasks = document.getElementById('other-tasks');
+const doneList = document.getElementById('done-list');
+const focusModeBtn = document.getElementById('focus-mode-btn');
+const resetBtn = document.getElementById('reset-btn');
+const resetModal = document.getElementById('reset-modal');
+const confirmReset = document.getElementById('confirm-reset');
+const cancelReset = document.getElementById('cancel-reset');
+
+// State
+let tasks = JSON.parse(localStorage.getItem('ivyTasks')) || [];
+let focusMode = false;
+
+// Load tasks on page load
+document.addEventListener('DOMContentLoaded', loadTasks);
+
+// Add Task
+taskForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const task = {
+        id: Date.now(),
+        subject: subjectInput.value,
+        description: descriptionInput.value,
+        time: parseInt(timeInput.value),
+        completed: false,
+        priority: tasks.length + 1
+    };
+    tasks.push(task);
+    saveTasks();
+    renderTasks();
+    taskForm.reset();
+});
+
+// Render Tasks
+function renderTasks() {
+    topTasks.innerHTML = '';
+    otherTasks.innerHTML = '';
+    doneList.innerHTML = '';
+
+    const sortedTasks = tasks.sort((a, b) => a.priority - b.priority);
+    sortedTasks.forEach((task, index) => {
+        const taskCard = createTaskCard(task, index);
+        if (task.completed) {
+            doneList.appendChild(taskCard);
+        } else if (index < 3) {
+            topTasks.appendChild(taskCard);
+        } else {
+            otherTasks.appendChild(taskCard);
+        }
+    });
+
+    // Highlight current focus task
+    const activeTasks = document.querySelectorAll('#active-tasks .task-card');
+    if (activeTasks.length > 0) {
+        activeTasks[0].classList.add('current-focus');
+    }
+}
+
+// Create Task Card
+function createTaskCard(task, index) {
+    const card = document.createElement('div');
+    card.className = `task-card ${index < 3 ? 'top-task' : ''}`;
+    card.innerHTML = `
+        <h3>${task.subject}</h3>
+        <p>${task.description}</p>
+        <p class="time">Estimated Time: ${task.time} min</p>
+        <div class="task-actions">
+            <button class="up-btn" onclick="moveTask(${task.id}, -1)">↑ Up</button>
+            <button class="down-btn" onclick="moveTask(${task.id}, 1)">↓ Down</button>
+            <button class="complete-btn" onclick="completeTask(${task.id})">Complete</button>
+        </div>
+    `;
+    return card;
+}
+
+// Move Task (Priority)
+function moveTask(id, direction) {
+    const taskIndex = tasks.findIndex(t => t.id === id);
+    const newIndex = taskIndex + direction;
+    if (newIndex >= 0 && newIndex < tasks.length) {
+        [tasks[taskIndex], tasks[newIndex]] = [tasks[newIndex], tasks[taskIndex]];
+        tasks.forEach((t, i) => t.priority = i + 1);
+        saveTasks();
+        renderTasks();
+    }
+}
+
+// Complete Task
+function completeTask(id) {
+    const task = tasks.find(t => t.id === id);
+    task.completed = true;
+    saveTasks();
+    renderTasks();
+}
+
+// Focus Mode Toggle
+focusModeBtn.addEventListener('click', () => {
+    focusMode = !focusMode;
+    document.body.classList.toggle('focus-mode', focusMode);
+    focusModeBtn.textContent = focusMode ? 'Disable Focus Mode' : 'Enable Focus Mode';
+});
+
+// Reset Tasks
+resetBtn.addEventListener('click', () => {
+    resetModal.classList.add('show');
+});
+confirmReset.addEventListener('click', () => {
+    tasks = [];
+    localStorage.removeItem('ivyTasks');
+    renderTasks();
+    resetModal.classList.remove('show');
+});
+cancelReset.addEventListener('click', () => {
+    resetModal.classList.remove('show');
+});
+
+// Save to LocalStorage
+function saveTasks() {
+    localStorage.setItem('ivyTasks', JSON.stringify(tasks));
+}
+
+// Load Tasks
+function loadTasks() {
+    renderTasks();
+}
+    </script>
+</body>
+</html>

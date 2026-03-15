@@ -1,0 +1,583 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Explore Tools - Student Toolkit</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <!-- Header Section -->
+        <header class="page-header">
+            <div class="container">
+                <h1>Explore Tools</h1>
+                <p class="subtitle">Power tools to study smarter, not harder</p>
+                <div class="divider"></div>
+            </div>
+        </header>
+        <style>
+        /* CSS Variables for Consistency and Easy Theming */
+:root {
+    --bg-dark: #0a0a0a; /* Dark background for premium feel */
+    --bg-glass: rgba(255, 255, 255, 0.1); /* Glassmorphism base */
+    --accent-blue: #00d4ff; /* Primary accent */
+    --accent-violet: #9c27b0; /* Secondary accent */
+    --accent-teal: #00bcd4; /* Tertiary accent */
+    --text-primary: #ffffff; /* Main text */
+    --text-secondary: #b0b0b0; /* Subtle text */
+    --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.3); /* Soft shadows */
+    --shadow-glow: 0 0 20px var(--accent-blue); /* Glow effect */
+    --shadow-deep: 0 8px 40px rgba(0, 0, 0, 0.5); /* Deeper shadows for depth */
+    --border-radius: 20px; /* Rounded corners for premium feel */
+    --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth transitions */
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Poppins', sans-serif; /* Modern, bold font */
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+/* Subtle animated background for depth */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(156, 39, 176, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 188, 212, 0.05) 0%, transparent 50%);
+    z-index: -1;
+    animation: bg-float 15s ease-in-out infinite alternate;
+}
+@keyframes bg-float {
+    0% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(20px) translateY(-20px); }
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 25px; /* Increased padding for better spacing */
+}
+
+/* Global Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ripple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: var(--shadow-glow); }
+    50% { box-shadow: 0 0 30px var(--accent-violet); }
+}
+.fade-in { animation: fadeInUp 0.8s ease-out; }
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    padding: 100px 25px; /* Increased padding */
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(156, 39, 176, 0.1));
+    border-radius: var(--border-radius);
+    margin: 20px;
+    box-shadow: var(--shadow-light);
+}
+.page-header h1 {
+    font-size: clamp(3rem, 8vw, 5rem); /* Larger, more powerful */
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    animation: fadeInUp 1s ease-out;
+}
+.page-header .subtitle {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: 400;
+    color: var(--accent-teal);
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+.divider {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet), var(--accent-teal));
+    margin: 0 auto;
+    border-radius: 2px;
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+/* Tools Grid - Enhanced Interactivity and Spacing */
+.tools-grid {
+    padding: 120px 25px; /* Increased padding for breathing room */
+    text-align: center;
+}
+.category {
+    margin-bottom: 80px; /* Space between categories */
+}
+.category h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-bottom: 40px;
+    animation: fadeInUp 0.8s ease-out;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Larger min-width for better spacing */
+    gap: 50px; /* Increased gap */
+}
+.tool-card {
+    position: relative;
+    backdrop-filter: blur(15px); /* Stronger glassmorphism */
+    background: var(--bg-glass);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--border-radius);
+    padding: 50px 40px; /* Increased padding */
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.tool-card:nth-child(1) { animation-delay: 0.1s; }
+.tool-card:nth-child(2) { animation-delay: 0.2s; }
+.tool-card:nth-child(3) { animation-delay: 0.3s; }
+.tool-card:nth-child(4) { animation-delay: 0.4s; }
+.tool-card:nth-child(5) { animation-delay: 0.5s; }
+.tool-card:nth-child(6) { animation-delay: 0.6s; }
+.tool-card:nth-child(7) { animation-delay: 0.7s; }
+.tool-card:nth-child(8) { animation-delay: 0.8s; }
+.tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+.tool-card:hover::before { left: 100%; }
+.tool-card:hover {
+    transform: translateY(-15px) scale(1.05); /* Enhanced lift and scale */
+    box-shadow: var(--shadow-deep), 0 0 40px var(--accent-blue); /* Deeper shadows and glow */
+}
+.tool-card .card-icon {
+    width: 80px; /* Larger icons */
+    height: 80px;
+    margin: 0 auto 30px; /* Better spacing */
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+.tool-card:hover .card-icon {
+    transform: rotate(15deg) scale(1.2); /* Fun rotation and scale */
+    filter: drop-shadow(0 0 10px var(--accent-blue));
+}
+.tool-card h3 {
+    font-size: 1.6rem; /* Larger titles */
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--accent-teal);
+    transition: color 0.3s ease;
+}
+.tool-card:hover h3 {
+    color: var(--accent-blue);
+}
+.tool-card p {
+    color: var(--text-secondary);
+    margin-bottom: 30px; /* More space before button */
+    font-size: 1rem;
+}
+.tool-btn {
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-teal));
+    color: var(--text-primary);
+    border: none;
+    padding: 14px 28px; /* Larger button */
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.tool-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+.tool-btn:hover::after {
+    width: 300px;
+    height: 300px;
+}
+.tool-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-violet);
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.modal.show {
+    display: flex;
+}
+.modal-content {
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: var(--shadow-deep);
+    position: relative;
+    animation: fadeInUp 0.5s ease-out;
+}
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.modal-close:hover {
+    color: var(--accent-blue);
+    transform: scale(1.2);
+}
+.modal h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+}
+.modal p {
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+.modal .placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Highlight Section */
+.highlight {
+    padding: 120px 25px; /* Increased padding */
+    text-align: center;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(156, 39, 176, 0.05));
+    border-radius: var(--border-radius);
+    margin: 20px;
+    box-shadow: var(--shadow-light);
+}
+.highlight h2 {
+    font-size: 2.8rem; /* Larger heading */
+    font-weight: 700;
+    margin-bottom: 60px;
+    color: var(--accent-violet);
+}
+.highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 50px; /* Increased gap */
+}
+.highlight-item {
+    padding: 40px 30px; /* Increased padding */
+    background: var(--bg-glass);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+}
+.highlight-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-deep), 0 0 30px var(--accent-teal);
+}
+.highlight-item .item-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 25px;
+    transition: transform 0.3s ease;
+}
+.highlight-item:hover .item-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+.highlight-item h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--accent-blue);
+}
+.highlight-item p {
+    color: var(--text-secondary);
+}
+
+/* Footer */
+.footer {
+    padding: 50px 25px; /* Increased padding */
+    text-align: center;
+    background: var(--bg-dark);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Responsive Design - Mobile-First */
+@media (max-width: 768px) {
+    .page-header, .tools-grid, .highlight {
+        padding: 60px 20px; /* Adjusted for mobile */
+        margin: 10px;
+    }
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    .page-header .subtitle {
+        font-size: 1.2rem;
+    }
+    .grid, .highlights {
+        grid-template-columns: 1fr;
+        gap: 30px; /* Adjusted gap */
+    }
+    .tool-card, .highlight-item {
+        padding: 40px 25px; /* Adjusted padding */
+    }
+    .tool-card .card-icon {
+        width: 70px;
+        height: 70px;
+    }
+    .modal-content {
+        padding: 30px;
+        width: 95%;
+    }
+}
+/* Purple → Blue Premium Button */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+
+</style>
+ <!-- Purple to Blue Button -->
+<a class="pb-btn" href="index1.html">← Back</a>
+    
+        <!-- Tools Grid -->
+        <section class="tools-grid">
+            <div class="container">
+                <!-- Study & Memory Tools -->
+                <div class="category">
+                    <h2>🧠 Study & Memory Tools</h2>
+                    <div class="grid">
+                        <div class="tool-card glass-card" data-tool="ivy">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h3>Ivy Technique Tool</h3>
+                            <p>Prioritization and focus method for efficient studying.</p>
+                           <a href="index3.html"><button class="tool-btn" data-tool="ivy">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="recall">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-violet)">
+                                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                                </svg>
+                            </div>
+                            <h3>Active Recall Planner</h3>
+                            <p>Plan sessions to actively recall and retain information.</p>
+                           <a href="index4.html"> <button class="tool-btn" data-tool="recall">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="spaced">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-teal)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                            </div>
+                            <h3>Spaced Repetition Planner</h3>
+                            <p>Schedule reviews for long-term memory retention.</p>
+                        <a href="index5.html"> <button class="tool-btn" data-tool="spaced">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="tracker">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <h3>Daily Revision Tracker</h3>
+                            <p>Track daily revisions for CBSE/State Board topics.</p>
+                            <a href="index6.html">   <button class="tool-btn" data-tool="tracker">Open Tool</button></a>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Productivity Tools -->
+                <div class="category">
+                    <h2>⏱️ Productivity Tools</h2>
+                    <div class="grid">
+                        <div class="tool-card glass-card" data-tool="pomodoro">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-violet)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                            </div>
+                            <h3>Pomodoro Study Timer</h3>
+                            <p>Timed sessions with breaks for focused study.</p>
+                            <a href="index7.html">   <button class="tool-btn" data-tool="pomodoro">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="focus">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-teal)">
+                                    <path d="M3 17V19h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+                                </svg>
+                            </div>
+                            <h3>Deep Focus Mode</h3>
+                            <p>Minimize distractions for deep concentration.</p>
+                            <a href="index8.html"><button class="tool-btn" data-tool="focus">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="session">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h3>Study Session Tracker</h3>
+                            <p>Log and analyze your study sessions.</p>
+                            <a href="index9.html">    <button class="tool-btn" data-tool="session">Open Tool</button> </a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="countdown">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-violet)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                            </div>
+                            <h3>Exam Countdown</h3>
+                            <p>Track time until CBSE/State Board exams.</p>
+                            <a href="index10.html">   <button class="tool-btn" data-tool="countdown">Open Tool</button></a>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Academic Calculators -->
+                <div class="category">
+                    <h2>📊 Academic Calculators</h2>
+                    <div class="grid">
+                        <div class="tool-card glass-card" data-tool="grade">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-teal)">
+                                    <path d="M7 2v11h3v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-9h3V2H7zm9 13h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2z"/>
+                                </svg>
+                            </div>
+                            <h3>Grade Calculator</h3>
+                            <p>Calculate grades based on marks and weightage.</p>
+                            <a href="index11.html"><button class="tool-btn" data-tool="grade">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="percentage">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                            </div>
+                            <h3>Percentage Calculator</h3>
+                            <p>Quick percentage calculations for exams.</p>
+                            <a href="index12.html"><button class="tool-btn" data-tool="percentage">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="average">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-violet)">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h3>Average Marks Calculator</h3>
+                            <p>Compute average marks across subjects.</p>
+                            <a href="index13.html"><button class="tool-btn" data-tool="average">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="gpa">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-teal)">
+                                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                                </svg>
+                            </div>
+                            <h3>GPA-style Score Estimator</h3>
+                            <p>Estimate scores in Indian grading format.</p>
+                            <a href="index14.html"><button class="tool-btn" data-tool="gpa">Open Tool</button></a>
+                        </div>
+                        <div class="tool-card glass-card" data-tool="attendance">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <h3>Attendance Calculator</h3>
+                            <p>Calculate required attendance percentage.</p>
+                            <a href="index15.html"><button class="tool-btn" data-tool="attendance">Open Tool</button></a>
+                        </div>
+                    </div>
+                </div>
+    
+          

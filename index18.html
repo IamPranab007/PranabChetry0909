@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Studying | Premium Mode</title>
+
+<style>
+:root{
+    --bg:#05060a;
+    --card:#0d111c;
+    --primary:#7c4dff;
+    --accent:#00c3ff;
+    --text:#ffffff;
+    --muted:#9aa0b5;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body{
+    background: radial-gradient(circle at top, #0a0f1e, var(--bg));
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text);
+}
+
+/* Main Card */
+.study-card{
+    width:95%;
+    max-width:480px;
+    background:linear-gradient(145deg, #0c1122, #060912);
+    border-radius:20px;
+    padding:30px 25px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(124,77,255,0.25);
+    border:1px solid rgba(124,77,255,0.15);
+}
+
+/* Heading */
+.study-card h1{
+    font-size:2.2rem;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:8px;
+}
+
+.study-card p{
+    color:var(--muted);
+    font-size:0.95rem;
+    margin-bottom:25px;
+}
+
+/* Timer */
+.timer{
+    font-size:3rem;
+    font-weight:700;
+    margin-bottom:25px;
+    letter-spacing:2px;
+}
+
+/* Buttons */
+.btn{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    cursor:pointer;
+    font-size:1.1rem;
+    font-weight:600;
+    color:white;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(0,195,255,0.35);
+}
+
+.btn:hover{
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 0 25px rgba(124,77,255,0.6);
+}
+
+.btn.secondary{
+    background:#131a30;
+    box-shadow:none;
+    margin-top:12px;
+    border:1px solid rgba(124,77,255,0.2);
+}
+
+.btn.secondary:hover{
+    background:#18214a;
+}
+
+/* Session Info */
+.session-box{
+    margin-top:25px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.box{
+    flex:1;
+    background:#0a1022;
+    border-radius:12px;
+    padding:10px;
+    border:1px solid rgba(124,77,255,0.12);
+}
+
+.box h3{
+    font-size:0.8rem;
+    color:var(--muted);
+}
+
+.box span{
+    font-size:1.2rem;
+    font-weight:600;
+}
+
+/* Anim */
+.glow{
+    animation:pulse 2s infinite alternate;
+}
+
+@keyframes pulse{
+    from{box-shadow:0 0 12px rgba(124,77,255,0.35);}
+    to{box-shadow:0 0 30px rgba(0,195,255,0.6);}
+}
+
+/* Mobile */
+@media(max-width:500px){
+    .timer{font-size:2.4rem;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="study-card glow">
+    <h1>Deep Study Mode</h1>
+    <p>Activate focus. Eliminate distractions. Start winning.</p>
+
+    <div class="timer" id="timer">25:00</div>
+
+    <button class="btn" onclick="startStudy()">▶ Start Studying</button>
+    <button class="btn secondary" onclick="resetTimer()">↺ Reset Session</button>
+
+    <div class="session-box">
+        <div class="box">
+            <h3>Sessions</h3>
+            <span id="sessions">0</span>
+        </div>
+        <div class="box">
+            <h3>Focus Time</h3>
+            <span id="focus">0 min</span>
+        </div>
+        <div class="box">
+            <h3>Status</h3>
+            <span id="status">Ready</span>
+        </div>
+    </div>
+</div>
+
+<script>
+let totalSeconds = 25 * 60;
+let interval;
+let sessionCount = 0;
+let totalFocus = 0;
+
+function updateTimer(){
+    let m = Math.floor(totalSeconds / 60);
+    let s = totalSeconds % 60;
+    document.getElementById("timer").textContent =
+        `${m}:${s < 10 ? "0" : ""}${s}`;
+}
+
+function startStudy(){
+    clearInterval(interval);
+    document.getElementById("status").textContent = "Focusing";
+    
+    interval = setInterval(() => {
+        if(totalSeconds > 0){
+            totalSeconds--;
+            updateTimer();
+        } else {
+            clearInterval(interval);
+            sessionCount++;
+            totalFocus += 25;
+            document.getElementById("sessions").textContent = sessionCount;
+            document.getElementById("focus").textContent = totalFocus + " min";
+            document.getElementById("status").textContent = "Session Done";
+            
+            alert("🔥 Focus Session Completed! Take a short break.");
+            
+            totalSeconds = 25 * 60;
+            updateTimer();
+        }
+    }, 1000);
+}
+
+function resetTimer(){
+    clearInterval(interval);
+    totalSeconds = 25 * 60;
+    updateTimer();
+    document.getElementById("status").textContent = "Ready";
+}
+</script>
+
+</body>
+</html>

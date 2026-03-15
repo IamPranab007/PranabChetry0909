@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Pomodoro Study System</title>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 1rem;
+        }
+        body.light-mode {
+            background-color: #ffffff;
+            color: #121212;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            margin-bottom: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            height: 100px;
+        }
+
+        /* Timer Section */
+        #timer-display {
+            font-size: 4rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        #mode-label {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        #progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        #progress-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .controls {
+            text-align: center;
+        }
+        .settings {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .settings label {
+            margin: 0.5rem;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            #timer-display {
+                font-size: 3rem;
+            }
+            .settings {
+                flex-direction: column;
+            }
+        }
+        .pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+    </style>
+</head>
+<body>
+    <a class="pb-btn" href="index2.html">← Back</a>
+    <header>
+        
+        <h1>Advanced Pomodoro Study System</h1>
+        <button id="theme-toggle">Toggle Light Mode</button>
+    </header>
+    <main>
+        <section id="timer-section">
+            <div id="timer-display">25:00</div>
+            <div id="mode-label">Focus</div>
+            <div id="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start</button>
+                <button id="pause-btn" disabled>Pause</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+            <div class="settings">
+                <label>Focus Time (min): <input type="number" id="focus-time" min="1" max="60" value="25"></label>
+                <label>Break Time (min): <input type="number" id="break-time" min="1" max="15" value="5"></label>
+                <label>Long Break (min): <input type="number" id="long-break-time" min="10" max="30" value="15"></label>
+            </div>
+            <div class="sound-toggle">
+                <label><input type="checkbox" id="sound-enabled" checked> Enable Sound Alerts</label>
+            </div>
+        </section>
+        
+        <section id="recall-section" class="hidden">
+            <h2>Active Recall Phase</h2>
+            <p id="recall-prompt">Write everything you remember without notes.</p>
+            <textarea id="recall-input" placeholder="Enter your recall notes here..."></textarea>
+            <button id="save-recall-btn">Save Recall Notes</button>
+        </section>
+        
+        <section id="analytics-section">
+            <h2>Focus Analytics</h2>
+            <div class="stat">
+                <span>Total Sessions:</span> <span id="total-sessions">0</span>
+            </div>
+            <div class="stat">
+                <span>Total Focus Time:</span> <span id="total-focus-time">0 min</span>
+            </div>
+            <div class="stat">
+                <span>Daily Focus Time:</span> <span id="daily-focus-time">0 min</span>
+            </div>
+            <div class="stat">
+                <span>Break vs Focus Ratio:</span> <span id="break-focus-ratio">0%</span>
+            </div>
+            <div id="daily-summary">
+                <h3>Daily Summary</h3>
+                <p id="summary-text">No data yet.</p>
+            </div>
+        </section>
+        
+        <section id="gamification-section">
+            <h2>Gamification</h2>
+            <div class="stat">
+                <span>Points:</span> <span id="points">0</span>
+            </div>
+            <div class="stat">
+                <span>Streak:</span> <span id="streak">0 days</span>
+            </div>
+            <div class="stat">
+                <span>Level:</span> <span id="level">Beginner</span>
+            </div>
+            <p id="motivation-msg">Keep studying!</p>
+        </section>
+        
+        <section id="smart-features">
+            <h2>Smart Focus Features</h2>
+            <button id="focus-mode-btn">Enter Focus Mode</button>
+            <div id="inactivity-reminder" class="hidden">Refocus reminder: Take a deep breath and continue!</div>
+            <div id="break-suggestion" class="hidden">Break suggestion: Stretch, drink water, or rest your eyes.</div>
+        </section>
+    </main>
+    <script>
+        // Global variables
+        let timerInterval;
+        let isRunning = false;
+        let isPaused = false;
+        let currentMode = 'focus'; // 'focus', 'break', 'longBreak'
+        let timeLeft = 25 * 60;
+        let focusTime = 25 * 60;
+        let breakTime = 5 * 60;
+        let longBreakTime = 15 * 60;
+        let sessionCount = 0;
+        let totalSessions = 0;
+        let totalFocusTime = 0;
+        let dailyFocusTime = 0;
+        let points = 0;
+        let streak = 0;
+        let level = 'Beginner';
+        let lastActiveTime = Date.now();
+        let focusMode = false;
+        let recallNotes = [];
+
+        // Load data from localStorage
+        function loadData() {
+            focusTime = (parseInt(localStorage.getItem('focusTime')) || 25) * 60;
+            breakTime = (parseInt(localStorage.getItem('breakTime')) || 5) * 60;
+            longBreakTime = (parseInt(localStorage.getItem('longBreakTime')) || 15) * 60;
+            totalSessions = parseInt(localStorage.getItem('totalSessions')) || 0;
+            totalFocusTime = parseInt(localStorage.getItem('totalFocusTime')) || 0;
+            dailyFocusTime = parseInt(localStorage.getItem('dailyFocusTime')) || 0;
+            points = parseInt(localStorage.getItem('points')) || 0;
+            streak = parseInt(localStorage.getItem('streak')) || 0;
+            level = localStorage.getItem('level') || 'Beginner';
+            recallNotes = JSON.parse(localStorage.getItem('recallNotes')) || [];
+            updateUI();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('focusTime', focusTime / 60);
+            localStorage.setItem('breakTime', breakTime / 60);
+            localStorage.setItem('longBreakTime', longBreakTime / 60);
+            localStorage.setItem('totalSessions', totalSessions);
+            localStorage.setItem('totalFocusTime', totalFocusTime);
+            localStorage.setItem('dailyFocusTime', dailyFocusTime);
+            localStorage.setItem('points', points);
+            localStorage.setItem('streak', streak);
+            localStorage.setItem('level', level);
+            localStorage.setItem('recallNotes', JSON.stringify(recallNotes));
+        }
+
+        // Update UI elements
+        function updateUI() {
+            document.getElementById('total-sessions').textContent = totalSessions;
+            document.getElementById('total-focus-time').textContent = Math.floor(totalFocusTime / 60) + ' min';
+            document.getElementById('daily-focus-time').textContent = Math.floor(dailyFocusTime / 60) + ' min';
+            document.getElementById('break-focus-ratio').textContent = totalSessions > 0 ? Math.round((totalFocusTime / (totalFocusTime + totalSessions * breakTime)) * 100) + '%' : '0%';
+            document.getElementById('points').textContent = points;
+            document.getElementById('streak').textContent = streak + ' days';
+            document.getElementById('level').textContent = level;
+            document.getElementById('summary-text').textContent = `Today: ${Math.floor(dailyFocusTime / 60)} min focused, ${totalSessions} sessions.`;
+            updateTimerDisplay();
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            const totalTime = currentMode === 'focus' ? focusTime : (currentMode === 'longBreak' ? longBreakTime : breakTime);
+            const progress = ((totalTime - timeLeft) / totalTime) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        // Start timer
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                isPaused = false;
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('pause-btn').disabled = false;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    lastActiveTime = Date.now();
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        handleTimerEnd();
+                    }
+                }, 1000);
+            }
+        }
+
+        // Pause timer
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                isPaused = true;
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('pause-btn').disabled = true;
+            }
+        }
+
+        // Reset timer
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            isPaused = false;
+            currentMode = 'focus';
+            timeLeft = focusTime;
+            document.getElementById('mode-label').textContent = 'Focus';
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            updateTimerDisplay();
+        }
+
+        // Handle timer end
+        function handleTimerEnd() {
+            if (currentMode === 'focus') {
+                totalSessions++;
+                totalFocusTime += focusTime;
+                dailyFocusTime += focusTime;
+                points += 10;
+                updateLevel();
+                showNotification('Focus session complete – take a break');
+                playSound();
+                // Trigger Active Recall
+                document.getElementById('recall-section').classList.remove('hidden');
+                document.getElementById('timer-section').classList.add('hidden');
+                if (totalSessions % 4 === 0) {
+                    currentMode = 'longBreak';
+                    timeLeft = longBreakTime;
+                    document.getElementById('mode-label').textContent = 'Long Break';
+                } else {
+                    currentMode = 'break';
+                    timeLeft = breakTime;
+                    document.getElementById('mode-label').textContent = 'Break';
+                }
+            } else {
+                currentMode = 'focus';
+                timeLeft = focusTime;
+                document.getElementById('mode-label').textContent = 'Focus';
+                showNotification('Break over – resume focusing');
+                playSound();
+            }
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            updateUI();
+            saveData();
+        }
+
+        // Show notification
+        function showNotification(message) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Pomodoro System', { body: message });
+            }
+        }
+
+        // Play sound (placeholder)
+        function playSound() {
+            if (document.getElementById('sound-enabled').checked) {
+                // TODO: Add sound playback code here, e.g., new Audio('path/to/sound.mp3').play();
+            }
+        }
+
+        // Update level based on points
+        function updateLevel() {
+            if (points >= 100) level = 'Elite';
+            else if (points >= 50) level = 'Deep Thinker';
+            else if (points >= 20) level = 'Focused';
+            else level = 'Beginner';
+            document.getElementById('motivation-msg').textContent = getMotivationMsg();
+        }
+
+        // Get random motivation message
+        function getMotivationMsg() {
+            const msgs = ['Great job!', 'Keep it up!', 'You\'re on fire!', 'Stay focused!'];
+            return msgs[Math.floor(Math.random() * msgs.length)];
+        }
+
+        // Inactivity check
+        setInterval(() => {
+            if (Date.now() - lastActiveTime > 5 * 60 * 1000 && isRunning) { // 5 minutes
+                document.getElementById('inactivity-reminder').classList.remove('hidden');
+            }
+        }, 60000);
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', startTimer);
+        document.getElementById('pause-btn').addEventListener('click', pauseTimer);
+        document.getElementById('reset-btn').addEventListener('click', resetTimer);
+        document.getElementById('focus-time').addEventListener('change', (e) => {
+            focusTime = e.target.value * 60;
+            if (currentMode === 'focus') timeLeft = focusTime;
+            updateTimerDisplay();
+            saveData();
+        });
+        document.getElementById('break-time').addEventListener('change', (e) => {
+            breakTime = e.target.value * 60;
+            saveData();
+        });
+        document.getElementById('long-break-time').addEventListener('change', (e) => {
+            longBreakTime = e.target.value * 60;
+            saveData();
+        });
+        document.getElementById('save-recall-btn').addEventListener('click', () => {
+            const note = document.getElementById('recall-input').value;
+            if (note) {
+                recallNotes.push({ date: new Date().toISOString(), note });
+                points += 5; // Bonus for recall
+                updateLevel();
+                document.getElementById('recall-input').value = '';
+                document.getElementById('recall-section').classList.add('hidden');
+                document.getElementById('timer-section').classList.remove('hidden');
+                saveData();
+                updateUI();
+            }
+        });
+        document.getElementById('focus-mode-btn').addEventListener('click', () => {
+            focusMode = !focusMode;
+            document.body.classList.toggle('focus-mode', focusMode);
+            document.getElementById('focus-mode-btn').textContent = focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode';
+        });
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') e.preventDefault(); // Prevent space scroll
+            if (e.key === 's' || e.key === ' ') startTimer();
+            if (e.key === 'p') pauseTimer();
+            if (e.key === 'r') resetTimer();
+        });
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>

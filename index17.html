@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Mock Test</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    background:radial-gradient(circle at top,#0f172a,#020617);
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:100%;
+    max-width:850px;
+    background:rgba(255,255,255,0.05);
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(56,189,248,.6);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:15px;
+    background:linear-gradient(90deg,#38bdf8,#6366f1,#22c55e);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+select,button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#0f172a;
+    color:white;
+    margin:8px 0;
+    cursor:pointer;
+}
+
+button{
+    background:linear-gradient(135deg,#7c3aed,#9333ea);
+    font-weight:600;
+}
+
+.question{
+    font-size:1.2rem;
+    margin-bottom:12px;
+}
+
+.options button{
+    background:#020617;
+}
+
+.options button:hover{
+    background:linear-gradient(135deg,#2563eb,#38bdf8);
+}
+
+.correct{background:#22c55e!important;}
+.wrong{background:#ef4444!important;}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.center{text-align:center;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🔥 Practice Mock Test 🔥</h1>
+
+<div id="startBox">
+<select id="subject">
+<option value="">Select Subject</option>
+<option value="physics">Physics</option>
+<option value="chemistry">Chemistry</option>
+<option value="maths">Maths</option>
+<option value="biology">Biology</option>
+</select>
+
+<button onclick="startTest()">Start Test</button>
+</div>
+
+<div id="testBox" style="display:none">
+<div class="top">
+<div>Q: <span id="qNum">1</span>/10</div>
+<div>⏳ <span id="timer">10:00</span></div>
+</div>
+
+<div class="question" id="question"></div>
+<div class="options" id="options"></div>
+</div>
+
+<div id="resultBox" class="center"></div>
+
+</div>
+
+<script>
+const questions={
+physics:[
+{q:"Speed formula?",o:["d/t","t/d","m/v","f/a"],a:0},
+{q:"SI unit of force?",o:["J","N","Pa","W"],a:1},
+{q:"Acceleration unit?",o:["m/s","m/s²","km/h","N"],a:1},
+{q:"Speed of light?",o:["3x10^8","3x10^6","1x10^8","5x10^7"],a:0},
+{q:"Energy unit?",o:["Joule","Newton","Watt","Pascal"],a:0},
+{q:"Work formula?",o:["F×d","m×v","P×t","a×t"],a:0},
+{q:"SI unit of power?",o:["J","N","W","Pa"],a:2},
+{q:"Force formula?",o:["m×a","d/t","v×t","p×v"],a:0},
+{q:"Density formula?",o:["m/v","v/m","m×v","d/t"],a:0},
+{q:"Pressure formula?",o:["F/A","A/F","m×g","v/t"],a:0}
+],
+
+chemistry:[
+{q:"pH of water?",o:["5","6","7","8"],a:2},
+{q:"Chemical formula of water?",o:["H2O","CO2","O2","H2"],a:0},
+{q:"Atomic number of Carbon?",o:["6","12","14","8"],a:0},
+{q:"NaCl is?",o:["Acid","Base","Salt","Metal"],a:2},
+{q:"Acid in lemon?",o:["Citric","Acetic","Sulphuric","Nitric"],a:0},
+{q:"Symbol of Iron?",o:["Ir","Fe","In","Ag"],a:1},
+{q:"pH of acid?",o:["<7",">7","=7","0"],a:0},
+{q:"Gas for respiration?",o:["CO2","O2","N2","H2"],a:1},
+{q:"Chemical symbol of gold?",o:["Ag","Au","Gd","Go"],a:1},
+{q:"Common salt formula?",o:["NaCl","KCl","Na2SO4","CaCl2"],a:0}
+],
+
+maths:[
+{q:"2+3×4 = ?",o:["14","20","24","10"],a:0},
+{q:"Value of π?",o:["2.14","3.14","4.13","1.41"],a:1},
+{q:"Square of 12?",o:["124","144","132","122"],a:1},
+{q:"√64 ?",o:["6","7","8","9"],a:2},
+{q:"10² ?",o:["20","100","10","1000"],a:1},
+{q:"Area of square?",o:["a²","2a","a³","a"],a:0},
+{q:"Perimeter of square?",o:["4a","a²","2a","a"],a:0},
+{q:"Cube of 3?",o:["9","27","6","12"],a:1},
+{q:"180° is?",o:["Straight angle","Right angle","Acute","Obtuse"],a:0},
+{q:"Sum of angles in triangle?",o:["90°","180°","360°","270°"],a:1}
+],
+
+biology:[
+{q:"Powerhouse of cell?",o:["Nucleus","Mitochondria","Ribosome","Vacuole"],a:1},
+{q:"Blood pigment?",o:["Hemoglobin","Chlorophyll","Plasma","Enzyme"],a:0},
+{q:"Photosynthesis occurs in?",o:["Mitochondria","Chloroplast","Nucleus","Cell wall"],a:1},
+{q:"Largest organ?",o:["Heart","Skin","Brain","Liver"],a:1},
+{q:"Respiration gas?",o:["O2","CO2","H2","N2"],a:0},
+{q:"Plant food making process?",o:["Respiration","Photosynthesis","Digestion","Excretion"],a:1},
+{q:"Human heart chambers?",o:["2","3","4","5"],a:2},
+{q:"Green pigment?",o:["Chlorophyll","Hemoglobin","Xanthophyll","Carotene"],a:0},
+{q:"Unit of life?",o:["Cell","Tissue","Organ","System"],a:0},
+{q:"Largest bone?",o:["Femur","Tibia","Skull","Rib"],a:0}
+]
+};
+
+let quiz=[],index=0,score=0,time=600,timerInt;
+
+function startTest(){
+    let sub=subject.value;
+    if(!sub) return alert("Select Subject");
+
+    quiz=[...questions[sub]];
+    startBox.style.display="none";
+    testBox.style.display="block";
+    loadQ();
+    startTimer();
+}
+
+function loadQ(){
+    if(index>=quiz.length){showResult();return;}
+    qNum.innerText=index+1;
+    question.innerText=quiz[index].q;
+    options.innerHTML="";
+    quiz[index].o.forEach((opt,i)=>{
+        let btn=document.createElement("button");
+        btn.innerText=opt;
+        btn.onclick=()=>check(i,btn);
+        options.appendChild(btn);
+    });
+}
+
+function check(i,btn){
+    let buttons=document.querySelectorAll(".options button");
+    buttons.forEach(b=>b.disabled=true);
+    if(i===quiz[index].a){
+        btn.classList.add("correct");
+        score++;
+    }else{
+        btn.classList.add("wrong");
+        buttons[quiz[index].a].classList.add("correct");
+    }
+    setTimeout(()=>{index++;loadQ();},800);
+}
+
+function showResult(){
+    clearInterval(timerInt);
+    testBox.style.display="none";
+    resultBox.innerHTML=`
+    <h2>🎯 Score: ${score}/10</h2>
+    <p>Accuracy: ${(score/10*100).toFixed(2)}%</p>
+    <button onclick="location.reload()">Retest</button>`;
+}
+
+function startTimer(){
+    timerInt=setInterval(()=>{
+        let m=Math.floor(time/60);
+        let s=time%60;
+        timer.innerText=`${m}:${s<10?'0'+s:s}`;
+        if(time--<=0) showResult();
+    },1000);
+}
+</script>
+
+</body>
+</html>

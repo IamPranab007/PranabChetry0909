@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Countdown</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 1rem;
+}
+body.light-mode {
+    background-color: #ffffff;
+    color: #121212;
+}
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+h1 {
+    margin-bottom: 1rem;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+button:hover {
+    background-color: #45a049;
+}
+input, select {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Sections */
+section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+/* Exam Cards */
+.exam-card {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+    position: relative;
+}
+.exam-card.green { background-color: #4CAF50; }
+.exam-card.yellow { background-color: #FFEB3B; color: #000; }
+.exam-card.red { background-color: #F44336; }
+.countdown {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+.progress-fill {
+    height: 100%;
+    background-color: #fff;
+    width: 0%;
+}
+.edit-btn, .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #555;
+}
+.edit-btn:hover, .delete-btn:hover {
+    background-color: #777;
+}
+.delete-btn {
+    right: 60px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .exam-card {
+        padding: 0.5rem;
+    }
+    .countdown {
+        font-size: 1.5rem;
+    }
+}
+
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+</style>
+<body>
+    <a class="pb-btn" href="index2.html">← Back</a>
+    <header>
+        <h1>Exam Countdown</h1>
+        <button id="theme-toggle">Toggle Light Mode</button>
+        <button id="clear-exams-btn">Clear All Exams</button>
+    </header>
+    <main>
+        <section id="add-exam-section">
+            <h2>Add Exam</h2>
+            <form id="add-exam-form">
+                <label>Name: <input type="text" id="exam-name" required></label>
+                <label>Subject: <input type="text" id="exam-subject" required></label>
+                <label>Date: <input type="date" id="exam-date" required></label>
+                <label>Type: 
+                    <select id="exam-type">
+                        <option value="Unit Test">Unit Test</option>
+                        <option value="Final">Final</option>
+                        <option value="Competitive">Competitive</option>
+                    </select>
+                </label>
+                <button type="submit">Add Exam</button>
+            </form>
+        </section>
+        
+        <section id="countdown-section">
+            <h2>Upcoming Exams</h2>
+            <div id="exam-list"></div>
+        </section>
+        
+        <section id="insights-section">
+            <h2>Study Insights</h2>
+            <div id="insights-content">
+                <p id="study-needed">Study needed: 0 hours/day</p>
+                <p id="suggestion">Stay consistent!</p>
+            </div>
+        </section>
+    </main>
+    <script >// Global variables
+        let exams = JSON.parse(localStorage.getItem('exams')) || [];
+        let sessions = JSON.parse(localStorage.getItem('sessions')) || []; // From Study Session Tracker
+        
+        // Load data
+        function loadData() {
+            exams = JSON.parse(localStorage.getItem('exams')) || [];
+            sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+            updateUI();
+        }
+        
+        // Save data
+        function saveData() {
+            localStorage.setItem('exams', JSON.stringify(exams));
+        }
+        
+        // Update UI
+        function updateUI() {
+            const examList = document.getElementById('exam-list');
+            examList.innerHTML = '';
+            exams.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach((exam, index) => {
+                const timeLeft = calculateTimeLeft(exam.date);
+                const urgency = getUrgency(timeLeft.days);
+                const progress = calculateProgress(exam.date);
+                examList.innerHTML += `
+                    <div class="exam-card ${urgency}">
+                        <h3>${exam.name} (${exam.subject}) - ${exam.type}</h3>
+                        <div class="countdown">${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <button class="edit-btn" onclick="editExam(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteExam(${index})">Delete</button>
+                    </div>
+                `;
+            });
+            updateInsights();
+        }
+        
+        // Calculate time left
+        function calculateTimeLeft(date) {
+            const now = new Date();
+            const examDate = new Date(date);
+            const diff = examDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            return { days, hours, minutes };
+        }
+        
+        // Get urgency color
+        function getUrgency(days) {
+            if (days > 30) return 'green';
+            if (days > 7) return 'yellow';
+            return 'red';
+        }
+        
+        // Calculate progress (time passed vs remaining)
+        function calculateProgress(date) {
+            const now = new Date();
+            const examDate = new Date(date);
+            const totalTime = examDate - new Date(examDate.getTime() - 90 * 24 * 60 * 60 * 1000); // Assume 90 days prep
+            const elapsed = now - (examDate - totalTime);
+            return Math.min((elapsed / totalTime) * 100, 100);
+        }
+        
+        // Update insights
+        function updateInsights() {
+            const nearestExam = exams.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+            if (!nearestExam) return;
+            const timeLeft = calculateTimeLeft(nearestExam.date);
+            const totalDays = timeLeft.days;
+            const totalStudyTime = sessions.reduce((sum, s) => sum + s.duration, 0) / 60; // Hours
+            const neededPerDay = totalStudyTime / Math.max(totalDays, 1);
+            document.getElementById('study-needed').textContent = `Study needed: ${neededPerDay.toFixed(1)} hours/day`;
+            const suggestion = totalDays > 30 ? 'Plenty of time, stay consistent' : totalDays > 7 ? 'Focus mode recommended' : 'Revision phase should start now';
+            document.getElementById('suggestion').textContent = suggestion;
+        }
+        
+        // Add exam
+        document.getElementById('add-exam-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const exam = {
+                name: document.getElementById('exam-name').value,
+                subject: document.getElementById('exam-subject').value,
+                date: document.getElementById('exam-date').value,
+                type: document.getElementById('exam-type').value
+            };
+            exams.push(exam);
+            saveData();
+            updateUI();
+            document.getElementById('add-exam-form').reset();
+        });
+        
+        // Edit exam
+        function editExam(index) {
+            const exam = exams[index];
+            document.getElementById('exam-name').value = exam.name;
+            document.getElementById('exam-subject').value = exam.subject;
+            document.getElementById('exam-date').value = exam.date;
+            document.getElementById('exam-type').value = exam.type;
+            deleteExam(index);
+        }
+        
+        // Delete exam
+        function deleteExam(index) {
+            exams.splice(index, 1);
+            saveData();
+            updateUI();
+        }
+        
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+        
+        // Clear exams
+        document.getElementById('clear-exams-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all exams?')) {
+                exams = [];
+                saveData();
+                updateUI();
+            }
+        });
+        
+        // Update countdown every second
+        setInterval(updateUI, 1000);
+        
+        // Initialize
+        loadData();</script>
+</body>
+</html>

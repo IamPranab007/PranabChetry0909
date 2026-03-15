@@ -1,0 +1,597 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Toolkit - Smart Tools for CBSE and State Board Students</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            /* CSS Variables for Consistency and Easy Theming */
+            :root {
+                --bg-dark: #0a0a0a; /* Dark background for premium feel */
+                --bg-glass: rgba(255, 255, 255, 0.1); /* Glassmorphism base */
+                --accent-blue: #00d4ff; /* Primary accent */
+                --accent-violet: #9c27b0; /* Secondary accent */
+                --accent-teal: #00bcd4; /* Tertiary accent */
+                --text-primary: #ffffff; /* Main text */
+                --text-secondary: #b0b0b0; /* Subtle text */
+                --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.3); /* Soft shadows */
+                --shadow-glow: 0 0 20px var(--accent-blue); /* Glow effect */
+                --border-radius: 16px; /* Rounded corners */
+                --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth transitions */
+            }
+    
+            /* Reset and Base Styles */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: 'Poppins', sans-serif; /* Modern, bold font */
+                background: var(--bg-dark);
+                color: var(--text-primary);
+                line-height: 1.6;
+                overflow-x: hidden;
+                position: relative;
+            }
+            /* Subtle animated background gradients/blobs for depth */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 80% 20%, rgba(156, 39, 176, 0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 40% 80%, rgba(0, 188, 212, 0.1) 0%, transparent 50%);
+                z-index: -1;
+                animation: bg-shift 10s ease-in-out infinite alternate;
+            }
+            @keyframes bg-shift {
+                0% { transform: translateX(0) translateY(0); }
+                100% { transform: translateX(10px) translateY(-10px); }
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+    
+            /* Global Animations */
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(50px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideInLeft {
+                from { opacity: 0; transform: translateX(-50px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes glow {
+                0%, 100% { box-shadow: var(--shadow-glow); }
+                50% { box-shadow: 0 0 30px var(--accent-violet); }
+            }
+            .fade-in { animation: fadeInUp 0.8s ease-out; }
+            .delay-1 { animation-delay: 0.2s; }
+            .delay-2 { animation-delay: 0.4s; }
+    
+            /* Hero Section - WOW Factor with Bold Typography and Animations */
+            .hero {
+                position: relative;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 20px;
+                overflow: hidden;
+            }
+            .hero-content {
+                z-index: 2;
+                max-width: 800px;
+            }
+            .hero h1 {
+                font-size: clamp(3rem, 8vw, 5rem); /* Responsive, powerful sizing */
+                font-weight: 700;
+                background: linear-gradient(45deg, var(--accent-blue), var(--accent-violet));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 20px;
+                animation: fadeInUp 1s ease-out;
+            }
+            .hero .tagline {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                font-weight: 600;
+                color: var(--accent-teal);
+                margin-bottom: 30px;
+                animation: fadeInUp 1s ease-out 0.2s both;
+            }
+            .hero .description {
+                font-size: 1.2rem;
+                color: var(--text-secondary);
+                margin-bottom: 40px;
+                animation: fadeInUp 1s ease-out 0.4s both;
+            }
+            .cta-buttons {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .btn {
+                padding: 16px 32px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                border: none;
+                border-radius: var(--border-radius);
+                cursor: pointer;
+                transition: var(--transition);
+                position: relative;
+                overflow: hidden;
+            }
+            /* Shimmer effect on buttons */
+            .btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+            .btn:hover::before { left: 100%; }
+            .btn-primary {
+                background: linear-gradient(45deg, var(--accent-blue), var(--accent-teal));
+                box-shadow: var(--shadow-light);
+            }
+            .btn-primary:hover {
+                transform: translateY(-5px) scale(1.05);
+                box-shadow: var(--shadow-glow);
+            }
+            .btn-secondary {
+                background: transparent;
+                border: 2px solid var(--accent-violet);
+                color: var(--accent-violet);
+            }
+            .btn-secondary:hover {
+                background: var(--accent-violet);
+                color: var(--text-primary);
+                transform: translateY(-5px);
+                box-shadow: 0 0 20px var(--accent-violet);
+            }
+            /* Animated background blobs for hero */
+            .hero-bg-blobs {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+            .blob {
+                position: absolute;
+                border-radius: 50%;
+                background: linear-gradient(45deg, var(--accent-blue), var(--accent-violet));
+                opacity: 0.1;
+                animation: float 6s ease-in-out infinite;
+            }
+            .blob-1 {
+                width: 300px;
+                height: 300px;
+                top: 10%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+            .blob-2 {
+                width: 200px;
+                height: 200px;
+                top: 60%;
+                right: 10%;
+                animation-delay: 2s;
+            }
+            .blob-3 {
+                width: 150px;
+                height: 150px;
+                bottom: 20%;
+                left: 50%;
+                animation-delay: 4s;
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-20px); }
+            }
+    
+            /* Features Section - Glass Cards with Depth and Hover Effects */
+            .features {
+                padding: 100px 20px;
+                text-align: center;
+            }
+            .features h2 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 60px;
+                color: var(--accent-blue);
+            }
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 40px;
+            }
+            .glass-card {
+                backdrop-filter: blur(10px); /* Glassmorphism effect */
+                background: var(--bg-glass);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: var(--border-radius);
+                padding: 40px 30px;
+                box-shadow: var(--shadow-light);
+                transition: var(--transition);
+                position: relative;
+                overflow: hidden;
+            }
+            .glass-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transition: left 0.6s;
+            }
+            .glass-card:hover::before { left: 100%; }
+            .glass-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            }
+            .feature-card .card-icon {
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 20px;
+                transition: transform 0.3s ease;
+            }
+            .feature-card:hover .card-icon {
+                transform: rotate(10deg) scale(1.1);
+            }
+            .feature-card h3 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: var(--accent-teal);
+            }
+            .feature-card p {
+                color: var(--text-secondary);
+            }
+    
+            /* How It Helps Students - Timeline Layout */
+            .how-helps {
+                padding: 100px 20px;
+                text-align: center;
+            }
+            .how-helps h2 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 60px;
+                color: var(--accent-violet);
+            }
+            .timeline {
+                display: flex;
+                flex-direction: column;
+                gap: 60px;
+                position: relative;
+            }
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: linear-gradient(to bottom, var(--accent-blue), var(--accent-teal));
+                transform: translateX(-50%);
+            }
+            .timeline-step {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            .timeline-step:nth-child(even) {
+                flex-direction: row-reverse;
+                text-align: right;
+            }
+            .timeline-step .step-icon {
+                width: 80px;
+                height: 80px;
+                background: var(--bg-glass);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: var(--shadow-light);
+                margin: 0 30px;
+                transition: var(--transition);
+            }
+            .timeline-step:hover .step-icon {
+                transform: scale(1.1);
+                box-shadow: var(--shadow-glow);
+            }
+            .timeline-step .step-content h3 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 10px;
+                color: var(--accent-blue);
+            }
+            .timeline-step .step-content p {
+                color: var(--text-secondary);
+            }
+    
+            /* Why Choose Student Toolkit - Minimal and Bold */
+            .why-choose {
+                padding: 100px 20px;
+                text-align: center;
+                background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(156, 39, 176, 0.05));
+            }
+            .why-choose h2 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 60px;
+                color: var(--accent-teal);
+            }
+            .trust-points {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 40px;
+            }
+            .trust-item {
+                padding: 30px;
+                background: var(--bg-glass);
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-light);
+                transition: var(--transition);
+            }
+            .trust-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            }
+            .trust-item h3 {
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: var(--accent-violet);
+            }
+            .trust-item p {
+                color: var(--text-secondary);
+            }
+    
+            /* Footer - Dark Minimal */
+            .footer {
+                padding: 40px 20px;
+                text-align: center;
+                background: var(--bg-dark);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .footer p {
+                color: var(--text-secondary);
+                font-size: 1rem;
+            }
+    
+            /* Responsive Design - Mobile-First */
+            @media (max-width: 768px) {
+                .hero {
+                    padding: 40px 20px;
+                    min-height: auto;
+                }
+                .hero h1 {
+                    font-size: 2.5rem;
+                }
+                .hero .tagline {
+                    font-size: 1.2rem;
+                }
+                .cta-buttons {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+                .features, .how-helps, .why-choose {
+                    padding: 60px 20px;
+                }
+                .features-grid, .trust-points {
+                    grid-template-columns: 1fr;
+                    gap: 30px;
+                }
+                .timeline::before {
+                    left: 20px;
+                }
+                .timeline-step {
+                    flex-direction: row !important;
+                    text-align: left !important;
+                    max-width: none;
+                }
+                .timeline-step .step-icon {
+                    margin: 0 20px 0 0;
+                }
+            }
+            .god-btn{
+    position:relative;
+    padding:16px 44px;
+    font-size:1.15rem;
+    font-weight:700;
+    border-radius:16px;
+    border:none;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg,#7c3aed,#9333ea);
+    box-shadow:
+        0 8px 0 #4c1d95,
+        0 0 25px rgba(124,58,237,.8),
+        inset 0 0 12px rgba(255,255,255,.2);
+    transition:all .25s ease;
+    overflow:hidden;
+}
+
+/* ICON */
+.god-btn .icon{
+    margin-right:8px;
+}
+
+/* HOVER EFFECT */
+.god-btn:hover{
+    background:linear-gradient(135deg,#2563eb,#38bdf8);
+    box-shadow:
+        0 10px 0 #1e40af,
+        0 0 35px rgba(56,189,248,1),
+        inset 0 0 15px rgba(255,255,255,.25);
+    transform:translateY(-2px) scale(1.08);
+}
+
+/* CLICK 3D PRESS */
+.god-btn:active{
+    transform:translateY(4px) scale(.97);
+    box-shadow:
+        0 4px 0 #1e3a8a,
+        0 0 18px rgba(56,189,248,.8);
+}
+
+/* RIPPLE EFFECT */
+.god-btn::after{
+    content:"";
+    position:absolute;
+    width:120%;
+    height:120%;
+    top:-10%;
+    left:-10%;
+    background:radial-gradient(circle,rgba(255,255,255,.4) 10%, transparent 70%);
+    opacity:0;
+    transition:.5s;
+}
+
+.god-btn:active::after{
+    opacity:1;
+    transform:scale(0);
+    transition:0s;
+}
+/* Brand Header */
+.brand-box{
+    position:fixed;
+    top:15px;
+    left:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(12px);
+    padding:8px 14px;
+    border-radius:14px;
+    box-shadow:0 0 20px rgba(124,77,255,0.4);
+    z-index:999;
+}
+
+/* Brain Logo */
+.logo{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#7c4dff,#00c3ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.4rem;
+    box-shadow:0 0 15px rgba(124,77,255,0.7);
+}
+
+/* Brand Text */
+.brand-text{
+    font-size:1.2rem;
+    font-weight:800;
+    letter-spacing:0.5px;
+    background:linear-gradient(90deg,#7c4dff,#00c3ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.brand-text span{
+    text-shadow:0 0 12px rgba(124,77,255,0.8);
+}
+
+/* Tagline */
+.brand-text p{
+    font-size:0.6rem;
+    font-weight:500;
+    margin-top:-2px;
+    color:#aaa;
+    letter-spacing:0.6px;
+}
+
+        </style>
+    </head>
+    <body>
+        <div class="brand-box">
+            <div class="logo">🧠</div>
+            <div class="brand-text">
+                Neuro<span>Build</span>
+                <p>Build Your Brain. Build Your Future.</p>
+            </div>
+        </div>
+        
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Student Toolkit</h1>
+                <p class="tagline">Smart Tools. Smart Study. Smart Students.</p>
+                <p class="description">Unlock your potential with premium resources tailored for CBSE and Indian State Board students in Classes 8–12. Study smarter, perform better, and achieve excellence.</p>
+                <div class="cta-buttons">
+                  <a href="index18.html">     <button class="btn btn-primary">Start Studying</button></a>
+                    <a href="index2.html"><button class="btn btn-secondary">Explore Tools</button></a>
+                </div>
+            </div>
+            <div class="hero-bg-blobs">
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+                <div class="blob blob-3"></div>
+            </div>
+        </section>
+    
+        <!-- Feature Grid -->
+        <section class="features">
+            <div class="container">
+                <h2>Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card glass-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="var(--accent-blue)">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Study Resources</h3>
+                        <p>Comprehensive notes, videos, and guides aligned with CBSE and State Board syllabi for Classes 8–12.</p>
+                        <a href="index16.html"><button class="god-btn">
+                            <span class="icon">⚡</span> OPEN
+                          </button></a>
+                          
+                    </div>
+                    <div class="feature-card glass-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="var(--accent-violet)">
+                                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                            </svg>
+                        </div>
+                        <h3>Practice & Mock Tests</h3>
+                        <p>Interactive quizzes and full mock exams to sharpen skills and boost confidence for board exams.</p>
+                        <a href="index17.html"><button class="god-btn">
+                            <span class="icon">⚡</span> OPEN
+                          </button></a>
+                    </div>
+                    
+                    <div class="feature-card glass-card">
+                    <h4>coming soon</h4>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="var(--accent-teal)">
+                                <path d="M3 17V19h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2

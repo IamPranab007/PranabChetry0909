@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Focus Mode</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+#main-container {
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #45a049;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+textarea {
+    height: 80px;
+}
+
+/* Timer Section */
+#timer-display {
+    font-size: 5rem;
+    text-align: center;
+    margin: 2rem 0;
+    font-weight: bold;
+}
+#mode-label {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+#progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+#progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #66BB6A);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+.controls {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Sections */
+section {
+    margin-bottom: 2rem;
+}
+.hidden {
+    display: none;
+}
+.stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+/* Focus Mode Styles */
+body.focus-mode {
+    background-color: #000;
+    overflow: hidden;
+}
+body.focus-mode #main-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body.focus-mode header,
+body.focus-mode #analytics-section,
+body.focus-mode .settings {
+    display: none;
+}
+body.focus-mode #timer-display {
+    font-size: 8rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    #timer-display {
+        font-size: 4rem;
+    }
+    body.focus-mode #timer-display {
+        font-size: 6rem;
+    }
+}
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+</style>
+<body>
+    <a class="pb-btn" href="index2.html">← Back</a>
+    <div id="main-container">
+        <header>
+            
+            <h1>Deep Focus Mode</h1>
+            <button id="settings-btn">Settings</button>
+        </header>
+        <main>
+            <section id="ritual-section">
+                <h2>Pre-Focus Ritual</h2>
+                <p id="breathing-guide">Breathe in... Breathe out...</p>
+                <input type="text" id="goal-input" placeholder="Set your goal for this session...">
+                <button id="start-ritual-btn">Begin Focus</button>
+            </section>
+            
+            <section id="timer-section" class="hidden">
+                <div id="timer-display">60:00</div>
+                <div id="mode-label">Deep Focus</div>
+                <div id="progress-bar">
+                    <div id="progress-fill"></div>
+                </div>
+                <div class="controls">
+                    <button id="start-btn">Start</button>
+                    <button id="pause-btn" disabled>Pause</button>
+                    <button id="reset-btn">Reset</button>
+                </div>
+                <div class="settings hidden" id="timer-settings">
+                    <label>Session Time (min): 
+                        <select id="session-time">
+                            <option value="60">60</option>
+                            <option value="90">90</option>
+                            <option value="120">120</option>
+                        </select>
+                    </label>
+                    <label>Break Time (min): <input type="number" id="break-time" min="0" max="10" value="5"></label>
+                    <label><input type="checkbox" id="no-break-mode"> No-Break Mode</label>
+                    <label><input type="checkbox" id="sound-enabled" checked> Enable Sound Alerts</label>
+                    <label><input type="checkbox" id="active-recall-enabled"> Enable Active Recall</label>
+                </div>
+            </section>
+            
+            <section id="reflection-section" class="hidden">
+                <h2>Post-Focus Reflection</h2>
+                <textarea id="completion-input" placeholder="What did you complete?"></textarea>
+                <textarea id="difficulty-input" placeholder="What was difficult?"></textarea>
+                <button id="save-reflection-btn">Save Reflection</button>
+            </section>
+            
+            <section id="recall-section" class="hidden">
+                <h2>Active Recall</h2>
+                <p>Recall everything from the session without notes.</p>
+                <textarea id="recall-input" placeholder="Enter your recall notes..."></textarea>
+                <button id="save-recall-btn">Save Recall</button>
+            </section>
+            
+            <section id="analytics-section">
+                <h2>Focus Analytics</h2>
+                <div class="stat">
+                    <span>Total Deep Sessions:</span> <span id="total-sessions">0</span>
+                </div>
+                <div class="stat">
+                    <span>Total Deep Time:</span> <span id="total-time">0 min</span>
+                </div>
+                <div class="stat">
+                    <span>Longest Session:</span> <span id="longest-session">0 min</span>
+                </div>
+                <div id="daily-summary">
+                    <h3>Daily Summary</h3>
+                    <p id="summary-text">No data yet.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>// Global variables
+        let timerInterval;
+        let isRunning = false;
+        let isPaused = false;
+        let currentMode = 'focus'; // 'focus', 'break'
+        let timeLeft = 60 * 60;
+        let sessionTime = 60 * 60;
+        let breakTime = 5 * 60;
+        let noBreakMode = false;
+        let activeRecallEnabled = false;
+        let soundEnabled = true;
+        let totalSessions = 0;
+        let totalTime = 0;
+        let longestSession = 0;
+        let dailyTime = 0;
+        let lastActiveTime = Date.now();
+        let focusMode = false;
+        let sessionLocked = false;
+        
+        // Load data from localStorage
+        function loadData() {
+            sessionTime = (parseInt(localStorage.getItem('sessionTime')) || 60) * 60;
+            breakTime = (parseInt(localStorage.getItem('breakTime')) || 5) * 60;
+            noBreakMode = localStorage.getItem('noBreakMode') === 'true';
+            activeRecallEnabled = localStorage.getItem('activeRecallEnabled') === 'true';
+            soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            totalSessions = parseInt(localStorage.getItem('totalSessions')) || 0;
+            totalTime = parseInt(localStorage.getItem('totalTime')) || 0;
+            longestSession = parseInt(localStorage.getItem('longestSession')) || 0;
+            dailyTime = parseInt(localStorage.getItem('dailyTime')) || 0;
+            updateUI();
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('sessionTime', sessionTime / 60);
+            localStorage.setItem('breakTime', breakTime / 60);
+            localStorage.setItem('noBreakMode', noBreakMode);
+            localStorage.setItem('activeRecallEnabled', activeRecallEnabled);
+            localStorage.setItem('soundEnabled', soundEnabled);
+            localStorage.setItem('totalSessions', totalSessions);
+            localStorage.setItem('totalTime', totalTime);
+            localStorage.setItem('longestSession', longestSession);
+            localStorage.setItem('dailyTime', dailyTime);
+        }
+        
+        // Update UI elements
+        function updateUI() {
+            document.getElementById('total-sessions').textContent = totalSessions;
+            document.getElementById('total-time').textContent = Math.floor(totalTime / 60) + ' min';
+            document.getElementById('longest-session').textContent = Math.floor(longestSession / 60) + ' min';
+            document.getElementById('summary-text').textContent = `Today: ${Math.floor(dailyTime / 60)} min deep focused.`;
+            updateTimerDisplay();
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            const totalTimeForMode = currentMode === 'focus' ? sessionTime : breakTime;
+            const progress = ((totalTimeForMode - timeLeft) / totalTimeForMode) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+        
+        // Start timer
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                isPaused = false;
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('pause-btn').disabled = false;
+                sessionLocked = true;
+                enterFocusMode();
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    lastActiveTime = Date.now();
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        handleTimerEnd();
+                    }
+                }, 1000);
+            }
+        }
+        
+        // Pause timer
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                isPaused = true;
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('pause-btn').disabled = true;
+            }
+        }
+        
+        // Reset timer
+        function resetTimer() {
+            if (sessionLocked && !confirm('Are you sure you want to reset? This will break your focus.')) return;
+            clearInterval(timerInterval);
+            isRunning = false;
+            isPaused = false;
+            currentMode = 'focus';
+            timeLeft = sessionTime;
+            document.getElementById('mode-label').textContent = 'Deep Focus';
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            sessionLocked = false;
+            exitFocusMode();
+            updateTimerDisplay();
+        }
+        
+        // Handle timer end
+        function handleTimerEnd() {
+            if (currentMode === 'focus') {
+                totalSessions++;
+                totalTime += sessionTime;
+                dailyTime += sessionTime;
+                if (sessionTime > longestSession) longestSession = sessionTime;
+                showNotification('Deep focus session complete!');
+                playSound();
+                if (!noBreakMode) {
+                    currentMode = 'break';
+                    timeLeft = breakTime;
+                    document.getElementById('mode-label').textContent = 'Break';
+                } else {
+                    resetTimer();
+                }
+                // Show reflection
+                document.getElementById('reflection-section').classList.remove('hidden');
+                document.getElementById('timer-section').classList.add('hidden');
+            } else {
+                currentMode = 'focus';
+                timeLeft = sessionTime;
+                document.getElementById('mode-label').textContent = 'Deep Focus';
+                showNotification('Break over – resume deep focus');
+                playSound();
+            }
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            updateUI();
+            saveData();
+        }
+        
+        // Enter focus mode
+        function enterFocusMode() {
+            focusMode = true;
+            document.body.classList.add('focus-mode');
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Exit focus mode
+        function exitFocusMode() {
+            focusMode = false;
+            document.body.classList.remove('focus-mode');
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Deep Focus Mode', { body: message });
+            }
+        }
+        
+        // Play sound (placeholder)
+        function playSound() {
+            if (soundEnabled) {
+                // TODO: Add sound playback code here, e.g., new Audio('path/to/sound.mp3').play();
+            }
+        }
+        
+        // Inactivity check
+        setInterval(() => {
+            if (Date.now() - lastActiveTime > 10 * 60 * 1000 && isRunning) { // 10 minutes
+                alert('Refocus alert: Take a deep breath and continue!');
+            }
+        }, 60000);
+        
+        // Tab switch warning
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isRunning) {
+                alert('Focus warning: You switched tabs. Stay focused!');
+            }
+        });
+        
+        // Event listeners
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            document.getElementById('timer-settings').classList.toggle('hidden');
+        });
+        document.getElementById('start-ritual-btn').addEventListener('click', () => {
+            if (!document.getElementById('goal-input').value.trim()) {
+                alert('Please set a goal first.');
+                return;
+            }
+            document.getElementById('ritual-section').classList.add('hidden');
+            document.getElementById('timer-section').classList.remove('hidden');
+        });
+        document.getElementById('start-btn').addEventListener('click', startTimer);
+        document.getElementById('pause-btn').addEventListener('click', pauseTimer);
+        document.getElementById('reset-btn').addEventListener('click', resetTimer);
+        document.getElementById('session-time').addEventListener('change', (e) => {
+            sessionTime = e.target.value * 60;
+            timeLeft = sessionTime;
+            updateTimerDisplay();
+            saveData();
+        });
+        document.getElementById('break-time').addEventListener('change', (e) => {
+            breakTime = e.target.value * 60;
+            saveData();
+        });
+        document.getElementById('no-break-mode').addEventListener('change', (e) => {
+            noBreakMode = e.target.checked;
+            saveData();
+        });
+        document.getElementById('sound-enabled').addEventListener('change', (e) => {
+            soundEnabled = e.target.checked;
+            saveData();
+        });
+        document.getElementById('active-recall-enabled').addEventListener('change', (e) => {
+            activeRecallEnabled = e.target.checked;
+            saveData();
+        });
+        document.getElementById('save-reflection-btn').addEventListener('click', () => {
+            document.getElementById('reflection-section').classList.add('hidden');
+            if (activeRecallEnabled) {
+                document.getElementById('recall-section').classList.remove('hidden');
+            } else {
+                document.getElementById('timer-section').classList.remove('hidden');
+            }
+        });
+        document.getElementById('save-recall-btn').addEventListener('click', () => {
+            const note = document.getElementById('recall-input').value;
+            if (note) {
+                // Save recall note (extend localStorage if needed)
+                document.getElementById('recall-input').value = '';
+                document.getElementById('recall-section').classList.add('hidden');
+                document.getElementById('timer-section').classList.remove('hidden');
+            }
+        });
+        
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+        
+        // Initialize
+        loadData();</script>
+</body>
+</html>

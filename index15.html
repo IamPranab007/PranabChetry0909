@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>God Mode Attendance Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 40px rgba(0,255,255,0.2);
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg,#38bdf8,#22c55e,#a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255,255,255,0.07);
+      color: white;
+      margin-bottom: 15px;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+      transition: 0.3s;
+    }
+
+    input:focus {
+      box-shadow: 0 0 15px rgba(56,189,248,0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border-radius: 15px;
+      border: none;
+      background: linear-gradient(90deg,#22c55e,#38bdf8,#a855f7);
+      font-size: 18px;
+      font-weight: 700;
+      color: #020617;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(56,189,248,0.4);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(168,85,247,0.8);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.06);
+      box-shadow: inset 0 0 15px rgba(255,255,255,0.04);
+      font-size: 22px;
+      font-weight: 700;
+      display: none;
+      animation: pop 0.4s ease;
+    }
+
+    .status {
+      font-size: 18px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from {opacity:0; transform: translateY(20px);}
+      to {opacity:1; transform: translateY(0);}
+    }
+
+    @keyframes pop {
+      from {transform: scale(0.8); opacity:0;}
+      to {transform: scale(1); opacity:1;}
+    }
+    .pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+  </style>
+</head>
+<a class="pb-btn" href="index2.html">← Back</a>
+
+<body>
+
+  <div class="container">
+    <h1>🔥 Attendance Calculator</h1>
+    <p>Premium Dark • Focus Mode • Dark UI</p>
+
+    <input id="total" type="number" placeholder="Total Classes">
+    <input id="attended" type="number" placeholder="Classes Attended">
+
+    <button onclick="calculate()">⚡ Calculate Attendance</button>
+
+    <div id="output" class="result">
+      <div id="percentage"></div>
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+
+<script>
+function calculate(){
+  let total = parseFloat(document.getElementById("total").value);
+  let attended = parseFloat(document.getElementById("attended").value);
+
+  if(isNaN(total) || isNaN(attended) || total <= 0 || attended < 0 || attended > total){
+    alert("Enter valid numbers bro 😤");
+    return;
+  }
+
+  let percent = (attended / total) * 100;
+  percent = percent.toFixed(2);
+
+  let status = "";
+
+  if(percent >= 90) status = "🔥 GOD LEVEL Attendance";
+  else if(percent >= 75) status = "⚡ Safe Zone";
+  else if(percent >= 60) status = "⚠ Danger Zone";
+  else status = "🚨 Critical Low";
+
+  document.getElementById("percentage").innerHTML = `🎯 Attendance: ${percent}%`;
+  document.getElementById("status").innerHTML = status;
+  document.getElementById("output").style.display = "block";
+}
+</script>
+
+</body>
+</html>

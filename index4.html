@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Active Recall Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:rgba(255,255,255,0.06);
+  --purple:#7c3aed;
+  --blue:#38bdf8;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#1e1b4b,var(--bg));
+  color:var(--text);
+  padding:24px;
+}
+
+.container{max-width:1000px;margin:auto}
+
+h1{
+  font-size:2.6rem;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.subtitle{color:var(--muted);margin-bottom:25px}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 45px rgba(0,0,0,.45);
+  animation:fadeUp .4s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+input,textarea{
+  width:100%;
+  background:#020617;
+  border:1px solid rgba(255,255,255,.1);
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+textarea{min-height:90px}
+
+button{
+  margin-top:14px;
+  padding:12px 22px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white;
+  font-weight:500;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 12px 35px rgba(124,58,237,.4);
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 45px rgba(56,189,248,.55);
+}
+
+.progress{
+  height:10px;
+  background:#020617;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:10px;
+}
+.progress span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  transition:.4s;
+}
+
+.recall-card{
+  border-left:4px solid var(--purple);
+}
+
+.answer{
+  display:none;
+  margin-top:12px;
+  color:#c7d2fe;
+}
+
+.rating{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.rating button{flex:1;box-shadow:none}
+
+.easy{background:#16a34a}
+.medium{background:#ca8a04}
+.hard{background:#dc2626}
+
+.tag{
+  margin-top:10px;
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:.8rem;
+}
+.tag.easy{background:rgba(22,163,74,.2);color:#4ade80}
+.tag.medium{background:rgba(202,138,4,.2);color:#facc15}
+.tag.hard{background:rgba(220,38,38,.2);color:#f87171}
+
+.focus{
+  position:fixed;
+  inset:0;
+  background:#020617;
+  display:none;
+  padding:30px;
+  z-index:100;
+}
+.focus .card{max-width:700px;margin:auto}
+/* Purple → Blue Premium Button */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+/* Purple → Blue Premium Button */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 35px rgba(124, 58, 237, 0.45);
+  transition: all 0.35s ease;
+}
+
+/* Hover → Blue */
+.pb-btn:hover {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Click */
+.pb-btn:active {
+  transform: scale(0.97);
+}
+
+</style>
+</head>
+ <!-- Purple to Blue Button -->
+ <a class="pb-btn" href="index2.html">← Back</a>
+    
+<body>
+<div class="container">
+  <h1>Active Recall Pro</h1>
+  <p class="subtitle">Recall smarter. Remember longer.</p>
+
+  <!-- DASHBOARD -->
+  <div class="card">
+    <strong>Memory Strength</strong>
+    <div class="progress"><span id="strength"></span></div>
+    <button onclick="startFocus()">Start Focus Session</button>
+  </div>
+
+  <!-- ADD QUESTION -->
+  <div class="card">
+    <input id="q" placeholder="Recall question">
+    <textarea id="a" placeholder="Correct answer"></textarea>
+    <button onclick="add()">Add to Recall Bank</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<!-- FOCUS MODE -->
+<div class="focus" id="focus">
+  <div class="card">
+    <strong id="fq"></strong>
+    <div class="answer" id="fa"></div>
+    <button onclick="reveal()">Reveal Answer</button>
+    <div class="rating">
+      <button class="easy" onclick="rateFocus('easy')">Easy</button>
+      <button class="medium" onclick="rateFocus('medium')">Medium</button>
+      <button class="hard" onclick="rateFocus('hard')">Hard</button>
+    </div>
+    <button onclick="endFocus()">Exit Focus</button>
+  </div>
+</div>
+
+<script>
+let data=JSON.parse(localStorage.getItem("recallPro"))||[];
+let index=0;
+
+function save(){localStorage.setItem("recallPro",JSON.stringify(data))}
+
+function add(){
+  if(!q.value||!a.value)return;
+  data.push({q:q.value,a:a.value,score:0});
+  q.value="";a.value="";
+  save();render();
+}
+
+function render(){
+  list.innerHTML="";
+  let total=0;
+  data.forEach((r,i)=>{
+    total+=r.score;
+    const d=document.createElement("div");
+    d.className="card recall-card";
+    d.innerHTML=`
+      <strong>${r.q}</strong>
+      <div class="answer">${r.a}</div>
+      <button onclick="this.previousElementSibling.style.display='block'">Reveal</button>
+      <span class="tag ${r.score>1?'easy':r.score==1?'medium':'hard'}">
+        Strength: ${r.score}
+      </span>`;
+    list.appendChild(d);
+  });
+  strength.style.width=(data.length?Math.min(100,total*10/data.length):0)+"%";
+}
+
+function startFocus(){
+  if(!data.length)return;
+  index=Math.floor(Math.random()*data.length);
+  fq.textContent=data[index].q;
+  fa.textContent=data[index].a;
+  fa.style.display="none";
+  focus.style.display="block";
+}
+
+function reveal(){fa.style.display="block"}
+
+function rateFocus(lvl){
+  if(lvl==="easy")data[index].score+=2;
+  if(lvl==="medium")data[index].score+=1;
+  save();render();startFocus();
+}
+
+function endFocus(){focus.style.display="none"}
+
+render();
+</script>
+</body>
+</html>
